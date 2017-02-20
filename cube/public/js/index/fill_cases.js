@@ -51,7 +51,11 @@ $(document).ready(function() {
                 operaciones: operaciones
             },
             success: function(data) {
-                
+                if (data.success == 200) {
+                    console.log(data);
+                } else {
+                    bootbox.alert("Ocurrio un error al intentar procesar las operaciones solicitadas.");
+                }
             }
         });
 

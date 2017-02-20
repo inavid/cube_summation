@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Tools\Constants;
+use App\Tools\Utils;
 use App\Cube;
 
 class IndexController extends Controller
@@ -43,10 +45,20 @@ class IndexController extends Controller
 
         $cube = new Cube($request_data['tamanio_matriz']);
 
-        var_dump($request_data);
-        die();
+        foreach ($request_data['operaciones'] as $key => $operacion) {
+            $operacion_decoded = json_decode($operacion);
+            if ($operacion_decoded->tipo_operacion == Constants::TIPO_OPERACION_UPDATE) {
+                $cube->update($operacion_decoded->line, $operacion_decoded->value);
+            } else {
+                $query_result[] = $cube->query($operacion_decoded->linea, $operacion_decoded->lineb);
+            }
+        }
         
-        return view('index/fill_cases', ['numero_casos'=>$request_data['numero_casos']+1]);
+        return response()->json([
+                'success'   => 200, 
+                'queryes'   => $query_result,
+                'cubo'      => $cube->cube
+            ], 200);
     }
 
 }

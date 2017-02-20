@@ -1,6 +1,8 @@
 <?php
 
 namespace App;
+use App\Tools\Constants;
+use App\Tools\Utils;
 
 class Cube
 {
@@ -30,17 +32,24 @@ class Cube
     * Metodo para realizar la operación update 
     *
     */
-    public function update(){
-
+    public function update($line, $w){
+        $this->cube[$line-1]['x'] = $this->cube[$line-1]['y'] = $this->cube[$line-1]['z'] = $w;
     }
 
     /**
     * Metodo para realizar la operación query
-    *
+    * @param $linea --> int --> A partir de donde inicia la suma
+    * @param $lineb --> int --> Hasta donde se sumaran los valores directos y que se interceden
+    * @return $result --> array --> Resultado de suma
     */
-    public function query(){
+    public function query($linea, $lineb){
+        $result = 0;
 
+        for ($i=($linea-1); $i <= ($lineb-1); $i++) { 
+            $result += $this->cube[$i]['x'];
+        }
+
+        return $result;
     }
-
 
 }
