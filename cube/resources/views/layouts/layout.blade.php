@@ -16,7 +16,6 @@
             <script src="{{{ asset('/js/jquery-3.1.1.min.js') }}}"></script>
             <script src="{{{ asset('/bootstrap/js/bootstrap.min.js') }}}"></script>
             <script src="{{{ asset('/js/bootbox.min.js') }}}"></script>
-            <script src="{{{ asset('/js/index/fill_cases.js') }}}"></script>
             @section('js')
             @show()
         @show()

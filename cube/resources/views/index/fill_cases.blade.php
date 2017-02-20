@@ -3,6 +3,7 @@
 @section('title', 'Casos de prueba')
 
 @section('scripts')
+    <script src="{{{ asset('/js/index/fill_cases.js') }}}"></script>
     @section('js')
 
 @section('content')

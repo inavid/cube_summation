@@ -30,10 +30,18 @@ $(document).ready(function() {
             if (tipo_operacion == 1) {
                 var x_value = $(this).find(".input_x_update").val();
                 var w_value = $(this).find(".input_w").val();
+                if (x_value.length == 0 || w_value.length == 0) {
+                    bootbox.alert("X y W no pueden estar vacios.");
+                    return false;
+                }
                 operacion = '{"tipo_operacion": "'+tipo_operacion+'", "line": "'+x_value+'", "value": "'+w_value+'"}';
             } else {
                 var xa_value = $(this).find(".input_xa_query").val();
                 var xb_value = $(this).find(".input_xb_query").val();
+                if (xa_value.length == 0 || xb_value.length == 0) {
+                    bootbox.alert("Xa y Xb no pueden estar vacios.");
+                    return false;
+                }
                 operacion = '{"tipo_operacion": "'+tipo_operacion+'", "linea": "'+xa_value+'", "lineb": "'+xb_value+'"}';
             }
 
@@ -111,10 +119,12 @@ $(document).ready(function() {
         if(inputValue > 1000){
             bootbox.alert("Recuerda que el numero de operaciones no puede ser mayor a 1000");
             $(this).val('');
+            $(this).parent().parent().parent().children(".operaciones").empty();
             return false;
         }
         if(inputValue <= 0){
             bootbox.alert("Recuerda que el numero de operaciones no puede ser 0 o negativo");
+            $(this).parent().parent().parent().children(".operaciones").empty();
             $(this).val('');
             return false;
         }
