@@ -2,41 +2,65 @@
 
 @section('title', 'Casos de prueba')
 
+@section('scripts')
+    @section('js')
+
 @section('content')
     <div class="jumbotron">
     	<h3 class="text-center">Llena los casos de prueba</h3>
     </div>
     <div class="container">
-    	<div class="row">
-            <div class="col-md-12">
-                <form class="form-horizontal" role="search" method="post" action="{{ action('IndexController@fillCases') }}">
-                    {{ csrf_field() }}
-                    @for ($i = 1; $i < $numero_casos; $i++)
-                        <h3>Caso de prueba {{ $i }}</h3>
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label for="inputKey" class="col-md-3 control-label">Tamaño Matriz(3xN)</label>
-                                <div class="col-md-3">
-                                    <select class="form-control">
-                                        <option value="1">1</option>
-                                    </select>
-                                </div>
-                                <label for="inputValue" class="col-md-3 control-label">Numero de operaciones</label>
-                                <div class="col-md-3">
-                                    <select class="form-control">
-                                        <option value="1">1</option>
-                                    </select>
-                                </div>
+        @for ($i = 1; $i <= $numero_casos; $i++)
+            <h3>Caso de prueba {{ $i }}</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="" class="">Tamaño Matriz(3xN)</label>
+                    <input type="number" class="tamanio_matriz form-control" name="tamanio_matriz" min="1" max="50">
+                </div>
+                <div class="col-md-6">
+                    <label for="" class="">Numero de operaciones</label>
+                    <input type="number" class="numero_operaciones form-control" name="numero_operaciones" min="1" max="1000">
+                </div>
+            </div>
+            <br>
+            <div class="row operaciones">
+                <div class="operacion">
+                    <div class="col-md-6">
+                        <label for="inputKey" class="col-md-3 control-label">Tipo Operación</label>
+                        <select class="form-control tipo_operacion">
+                            <option value="1">UPDATE</option>
+                            <option value="2">QUERY</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="update_fields text-center">
+                            <label for="inputValue" class="col-md-3 control-label">UPDATE</label>
+                            <div class="col-md-4">
+                                <input type="number" class="input_x_update" placeholder="Xn">
+                                <input type="number" class="input_y_update" placeholder="Yn" readonly="readonly">
+                                <input type="number" class="input_z_update" placeholder="Zn" readonly="readonly">
+                                <input type="number" class="input_w" placeholder="W">
                             </div>
                         </div>
-                        <div class="form-group hide">
-                            <input type="text" name="numero_casos" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Numero de casos de prueba">
+                        <div class="query_fields text-center" style="display: none;">
+                            <label for="inputValue" class="col-md-3 control-label">QUERY</label>
+                            <div class="col-md-3">
+                                <input type="text" class="input_xa_query" placeholder="Xa">
+                                <input type="text" class="input_ya_query" placeholder="Ya" readonly="readonly">
+                                <input type="text" class="input_za_query" placeholder="Za" readonly="readonly">
+                                <br>
+                                <input type="text" class="input_xa_query" placeholder="Xb">
+                                <input type="text" class="input_ya_query" placeholder="Yb" readonly="readonly">
+                                <input type="text" class="input_za_query" placeholder="Zb" readonly="readonly">
+                            </div>
                         </div>
-                    @endfor
-                    <button type="submit" class="btn btn-default">Comenzar =)</button>
-                </form>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4"></div>
-    	</div>
+            <br>
+            <div class="form-group text-center">
+                <button type="button" class="btn btn-default calculate">Mostrar resultados</button>
+            </div>
+        @endfor
     </div>
 @endsection
