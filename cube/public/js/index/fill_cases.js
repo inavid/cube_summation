@@ -52,7 +52,12 @@ $(document).ready(function() {
             },
             success: function(data) {
                 if (data.success == 200) {
-                    console.log(data);
+                    $("#myModal").find(".modal-body").empty();
+                    jQuery(data.queryes).each(function(i,e) {
+                        var query_readable = "<p> Resultado query "+(i+1)+": "+e+"</p>";
+                        $("#myModal").find(".modal-body").append(query_readable);
+                    });
+                    $("#myModal").modal("show");
                 } else {
                     bootbox.alert("Ocurrio un error al intentar procesar las operaciones solicitadas.");
                 }
