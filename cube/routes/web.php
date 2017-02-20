@@ -18,3 +18,5 @@ Route::get('/', function () {
 Route::get('/index', 'IndexController@index');
 
 Route::post('/fillcases', 'IndexController@fillCases');
+
+Route::post('/calculate', 'IndexController@calculate');

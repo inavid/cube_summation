@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Cube;
 
 class IndexController extends Controller
 {
@@ -27,7 +28,25 @@ class IndexController extends Controller
         #Se obtiene el numero de casos de prueba solicitados
         $request_data = $request->all();
         
-        return view('index/fill_cases', array('numero_casos'=>$request_data['numero_casos']+1));
+        return view('index/fill_cases', ['numero_casos'=>$request_data['numero_casos']+1]);
+    }
+
+    /**
+    * Procesa operaciones de un caso de prueba
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function calculate(Request $request)
+    {
+        #Se obtiene el numero de casos de prueba solicitados
+        $request_data = $request->all();
+
+        $cube = new Cube($request_data['tamanio_matriz']);
+
+        var_dump($request_data);
+        die();
+        
+        return view('index/fill_cases', ['numero_casos'=>$request_data['numero_casos']+1]);
     }
 
 }
