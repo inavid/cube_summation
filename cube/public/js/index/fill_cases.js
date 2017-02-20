@@ -1,6 +1,6 @@
 var tamanio_matriz;
 $(document).ready(function() {
-    var operacion = '<div class="operacion"><div class="col-md-6"><label for="inputKey" class="col-md-3 control-label">Tipo Operación</label><select class="form-control tipo_operacion"><option value="1">UPDATE</option><option value="2">QUERY</option></select></div><div class="col-md-6"><div class="update_fields text-center"><label for="inputValue" class="col-md-3 control-label">UPDATE</label><div class="col-md-4"><input type="number" class="input_x_update" placeholder="Xn"><input type="number" class="input_y_update" placeholder="Yn" readonly="readonly"><input type="number" class="input_z_update" placeholder="Zn" readonly="readonly"><input type="number" class="input_w" placeholder="W"></div></div><div class="query_fields text-center" style="display: none;"><label for="inputValue" class="col-md-3 control-label">QUERY</label><div class="col-md-3"><input type="text" class="input_xa_query" placeholder="Xa"><input type="text" class="input_ya_query" placeholder="Ya" readonly="readonly"><input type="text" class="input_za_query" placeholder="Za" readonly="readonly"><br><input type="text" class="input_xa_query" placeholder="Xb"><input type="text" class="input_ya_query" placeholder="Yb" readonly="readonly"><input type="text" class="input_za_query" placeholder="Zb" readonly="readonly"></div></div></div></div>';
+    var operacion = '<div class="operacion"><div class="col-md-6"><label for="inputKey" class="col-md-3 control-label">Tipo Operación</label><select class="form-control tipo_operacion"><option value="1">UPDATE</option><option value="2">QUERY</option></select></div><div class="col-md-6"><div class="update_fields text-center"><label for="inputValue" class="col-md-3 control-label">UPDATE</label><div class="col-md-4"><input type="number" class="input_x_update" placeholder="Xn"><input type="number" class="input_y_update" placeholder="Yn" readonly="readonly"><input type="number" class="input_z_update" placeholder="Zn" readonly="readonly"><input type="number" class="input_w" placeholder="W"></div></div><div class="query_fields text-center" style="display: none;"><label for="inputValue" class="col-md-3 control-label">QUERY</label><div class="col-md-3"><input type="text" class="input_xa_query" placeholder="Xa"><input type="text" class="input_ya_query" placeholder="Ya" readonly="readonly"><input type="text" class="input_za_query" placeholder="Za" readonly="readonly"><br><input type="text" class="input_xb_query" placeholder="Xb"><input type="text" class="input_yb_query" placeholder="Yb" readonly="readonly"><input type="text" class="input_zb_query" placeholder="Zb" readonly="readonly"></div></div></div></div>';
 
     $.ajaxSetup({
         cache: false,
@@ -15,30 +15,29 @@ $(document).ready(function() {
         e.stopPropagation();
         
         //Obtiene tamaño de matriz
-        var tipo_operacion = [];
-        var numero_operaciones = $(this).parent().parent().find(".numero_operaciones").val();
-        tamanio_matriz = $(this).parent().parent().find(".tamanio_matriz").val();
-
-
-        //Obtiene arreglo de operaciones
-        // jQuery($(this).parent().parent().find(".tipo_operacion option:selected")).each(function(i,e) {
-        //     tipo_operacion[] = e.val();
-        // });
+        var operaciones = [];
+        var numero_operaciones = $(this).parent().parent().children(".row").children(".col-md-6").children(".numero_operaciones").val();
+        tamanio_matriz = $(this).parent().parent().children(".row").children(".col-md-6").children(".tamanio_matriz").val();
 
         //Obtiene arreglo de operaciones
-        jQuery($(this).parent().parent().find(".operacion")).each(function(i,e) {
+        jQuery($(this).parent().parent().children(".operaciones").children(".operacion")).each(function(i,e) {
             var operacion = "";
             var tipo_operacion = "";
+            var x_value = "";
 
             var tipo_operacion = $(this).find(".tipo_operacion option:selected").val();
 
             if (tipo_operacion == 1) {
-                operacion = 
+                var x_value = $(this).find(".input_x_update").val();
+                var w_value = $(this).find(".input_w").val();
+                operacion = '{"tipo_operacion": "'+tipo_operacion+'", "line": "'+x_value+'", "value": "'+w_value+'"}';
             } else {
-                operacion = 
+                var xa_value = $(this).find(".input_xa_query").val();
+                var xb_value = $(this).find(".input_xb_query").val();
+                operacion = '{"tipo_operacion": "'+tipo_operacion+'", "linea": "'+xa_value+'", "lineb": "'+xb_value+'"}';
             }
 
-
+            operaciones.push(operacion);
         });
 
         $.ajax({
@@ -49,7 +48,7 @@ $(document).ready(function() {
             data: {
                 tamanio_matriz: tamanio_matriz,
                 numero_operaciones: numero_operaciones,
-                tipos_operaciones: tipo_operacion
+                operaciones: operaciones
             },
             success: function(data) {
                 
@@ -64,9 +63,14 @@ $(document).ready(function() {
         e.stopPropagation();
         var inputValue = $(this).val();
         tamanio_matriz = inputValue;
-        var TABKEY = 9;
-        if(e.keyCode == TABKEY) {
-            return false;
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) || 
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
         }
         if(inputValue > 100){
             bootbox.alert("Recuerda que el tamaño de la matriz no puede ser mayor a 50");
@@ -86,9 +90,14 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
         var inputValue = $(this).val();
-        var TABKEY = 9;
-        if(e.keyCode == TABKEY) {
-            return false;
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) || 
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
         }
         if(inputValue > 1000){
             bootbox.alert("Recuerda que el numero de operaciones no puede ser mayor a 1000");
@@ -101,9 +110,9 @@ $(document).ready(function() {
             return false;
         }
         //Añadimos las operaciones necesarias
-        $(this).parent().parent().parent().parent().find(".operaciones").empty();
+        $(this).parent().parent().parent().children(".operaciones").empty();
         for (var i = 1; i <= inputValue; i++) {
-            $(this).parent().parent().parent().parent().find(".operaciones").append(operacion);
+            $(this).parent().parent().parent().children(".operaciones").append(operacion);
         }
     });
 
@@ -120,14 +129,57 @@ $(document).ready(function() {
         if (parseInt(inputValue) > parseInt(tamanio_matriz)) {
             bootbox.alert("El tamaño de tu matriz es de "+tamanio_matriz);
             $(this).val('');
-            $(this).parent().find('.input_y_update').val('');
-            $(this).parent().find('.input_z_update').val('');
+            $(this).parent().children('.input_y_update').val('');
+            $(this).parent().children('.input_z_update').val('');
             return false;
         }
-        console.log(inputValue);
         //Seteamos valores de Y y Z
-        $(this).parent().find('.input_y_update').val(inputValue);
-        $(this).parent().find('.input_z_update').val(inputValue);
+        $(this).parent().children('.input_y_update').val(inputValue);
+        $(this).parent().children('.input_z_update').val(inputValue);
+    });
+
+    //Evento de llenado de valores para y, z a partir del valor de x en query A
+    $(document).on('keyup', '.input_xa_query', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var inputValue = $(this).val();
+        var TABKEY = 9;
+        if(e.keyCode == TABKEY) {
+            return false;
+        }
+
+        if (parseInt(inputValue) > parseInt(tamanio_matriz)) {
+            bootbox.alert("El tamaño de tu matriz es de "+tamanio_matriz);
+            $(this).val('');
+            $(this).parent().children('.input_ya_query').val('');
+            $(this).parent().children('.input_za_query').val('');
+            return false;
+        }
+        //Seteamos valores de Y y Z
+        $(this).parent().children('.input_ya_query').val(inputValue);
+        $(this).parent().children('.input_za_query').val(inputValue);
+    });
+
+    //Evento de llenado de valores para y, z a partir del valor de x en query B
+    $(document).on('keyup', '.input_xb_query', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var inputValue = $(this).val();
+        var TABKEY = 9;
+        if(e.keyCode == TABKEY) {
+            return false;
+        }
+
+        if (parseInt(inputValue) > parseInt(tamanio_matriz)) {
+            bootbox.alert("El tamaño de tu matriz es de "+tamanio_matriz);
+            $(this).val('');
+            $(this).parent().children('.input_yb_query').val('');
+            $(this).parent().children('.input_zb_query').val('');
+            return false;
+        }
+        //Seteamos valores de Y y Z
+        $(this).parent().children('.input_yb_query').val(inputValue);
+        $(this).parent().children('.input_zb_query').val(inputValue);
     });
 
     //Evento de llenado de valores para w
@@ -158,11 +210,11 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
         if ($(this).val() == 1){
-            $(this).parent().parent().find(".query_fields").hide();
-            $(this).parent().parent().find(".update_fields").show();
+            $(this).parent().parent().children(".col-md-6").children(".query_fields").hide();
+            $(this).parent().parent().children(".col-md-6").children(".update_fields").show();
         } else {
-            $(this).parent().parent().find(".update_fields").hide();
-            $(this).parent().parent().find(".query_fields").show();
+            $(this).parent().parent().children(".col-md-6").children(".update_fields").hide();
+            $(this).parent().parent().children(".col-md-6").children(".query_fields").show();
         }
     });
 
